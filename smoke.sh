@@ -17,7 +17,7 @@ echo "OK: Found 4 orders."
 
 # 2. Create an order
 echo "\n--- 2. Creating a new order ---"
-create_payload='{"customerName":"Test Customer","customerEmail":"test@example.com","itemDescription":"Test Item","quantity":10,"unitPriceDollars":9.99,"notes":"A test order"}'
+create_payload='{"customerName":"Test Customer","customerEmail":"test@example.com","itemDescription":"Test Item","quantity":10,"unitPriceCents":999,"notes":"A test order"}'
 created_order_id=$(curl -s -X POST -H "Content-Type: application/json" -d "$create_payload" "$API_URL/orders" | grep -o '"id":[0-9]*' | cut -d: -f2)
 
 if [ -z "$created_order_id" ]; then
@@ -37,7 +37,7 @@ echo "OK: Found 5 orders."
 
 # 4. Update the order
 echo "\n--- 4. Updating the order ---"
-update_payload='{"customerName":"Updated Customer","customerEmail":"updated@example.com","itemDescription":"Updated Item","quantity":20,"unitPriceDollars":19.99,"status":"PAID","notes":"Updated notes"}'
+update_payload='{"customerName":"Updated Customer","customerEmail":"updated@example.com","itemDescription":"Updated Item","quantity":20,"unitPriceCents":1999,"status":"PAID","notes":"Updated notes"}'
 curl -s -X PUT -H "Content-Type: application/json" -d "$update_payload" "$API_URL/orders/$created_order_id" > /dev/null
 # check if the notes are updated
 notes=$(curl -s "$API_URL/orders/$created_order_id" | grep -o '"notes":"[^"]*"' | cut -d: -f2 | tr -d '"')

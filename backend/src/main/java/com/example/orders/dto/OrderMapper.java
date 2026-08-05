@@ -4,8 +4,7 @@ import com.example.orders.model.Order;
 import com.example.orders.model.OrderStatus;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+
 
 @Component
 public class OrderMapper {
@@ -31,7 +30,7 @@ public class OrderMapper {
         order.setCustomerEmail(createOrderRequest.customerEmail());
         order.setItemDescription(createOrderRequest.itemDescription());
         order.setQuantity(createOrderRequest.quantity());
-        order.setUnitPriceCents(convertDollarsToCents(createOrderRequest.unitPriceDollars()));
+        order.setUnitPriceCents(createOrderRequest.unitPriceCents());
         order.setStatus(OrderStatus.NEW);
         order.setNotes(createOrderRequest.notes());
         return order;
@@ -42,15 +41,10 @@ public class OrderMapper {
         order.setCustomerEmail(updateOrderRequest.customerEmail());
         order.setItemDescription(updateOrderRequest.itemDescription());
         order.setQuantity(updateOrderRequest.quantity());
-        order.setUnitPriceCents(convertDollarsToCents(updateOrderRequest.unitPriceDollars()));
+        order.setUnitPriceCents(updateOrderRequest.unitPriceCents());
         order.setStatus(updateOrderRequest.status());
         order.setNotes(updateOrderRequest.notes());
     }
 
-    private Integer convertDollarsToCents(BigDecimal dollars) {
-        if (dollars == null) {
-            throw new IllegalArgumentException("Price cannot be null.");
-        }
-        return dollars.multiply(BigDecimal.valueOf(100)).setScale(0, RoundingMode.HALF_UP).intValue();
-    }
+
 }
