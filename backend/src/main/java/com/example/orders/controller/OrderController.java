@@ -74,21 +74,23 @@ public class OrderController {
 
     @GetMapping("/export.csv")
     public ResponseEntity<String> exportCsv() {
-        List<Order> orders = orderService.getAllOrders(Sort.by(Sort.Direction.ASC, "id"));
+        List<OrderDto> orders = orderService.getAllOrders(Sort.by(Sort.Direction.ASC, "id")).stream()
+                .map(orderMapper::toDto)
+                .collect(Collectors.toList());
         StringWriter sw = new StringWriter();
         sw.append("id,customer_name,customer_email,item_description,quantity,unit_price_cents,status,created_at,updated_at,notes\n");
-        for (Order order : orders) {
+        for (OrderDto order : orders) {
             sw.append(String.join(",",
-                    String.valueOf(order.getId()),
-                    escapeCsv(order.getCustomerName()),
-                    escapeCsv(order.getCustomerEmail()),
-                    escapeCsv(order.getItemDescription()),
-                    String.valueOf(order.getQuantity()),
-                    String.valueOf(order.getUnitPriceCents()),
-                    order.getStatus().name(),
-                    escapeCsv(order.getCreatedAt().toString()),
-                    escapeCsv(order.getUpdatedAt().toString()),
-                    escapeCsv(order.getNotes())
+                    String.valueOf(order.id()),
+                    escapeCsv(order.customerName()),
+                    escapeCsv(order.customerEmail()),
+                    escapeCsv(order.itemDescription()),
+                    String.valueOf(order.quantity()),
+                    String.valueOf(order.unitPriceCents()),
+                    order.status().name(),
+                    escapeCsv(order.createdAt().toString()),
+                    escapeCsv(order.updatedAt().toString()),
+                    escapeCsv(order.notes())
             )).append("\n");
         }
 
