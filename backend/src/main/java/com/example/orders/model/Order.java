@@ -26,7 +26,8 @@ public class Order {
 
     private BigDecimal price;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
     
     @Column(name = "created_at", updatable = false)
     private Instant createdAt;
@@ -78,11 +79,11 @@ public class Order {
         this.price = price;
     }
 
-    public String getStatus() {
+    public OrderStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(OrderStatus status) {
         this.status = status;
     }
 
