@@ -23,7 +23,7 @@ public class OrderService {
 
     public Order createOrder(CreateOrderRequest createOrderRequest) {
         Order order = new Order();
-        order.setProductName(createOrderRequest.getProductName());
+        order.setProduct(createOrderRequest.getProduct());
         order.setQuantity(createOrderRequest.getQuantity());
         order.setPrice(createOrderRequest.getPrice());
         order.setStatus("PENDING");
@@ -34,8 +34,8 @@ public class OrderService {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
 
-        if (updateOrderRequest.getProductName() != null) {
-            order.setProductName(updateOrderRequest.getProductName());
+        if (updateOrderRequest.getProduct() != null) {
+            order.setProduct(updateOrderRequest.getProduct());
         }
         if (updateOrderRequest.getQuantity() != null) {
             order.setQuantity(updateOrderRequest.getQuantity());

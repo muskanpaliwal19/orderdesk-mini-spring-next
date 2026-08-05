@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 public class UpdateOrderRequest {
 
-    private String productName;
+    private String product;
 
     @Positive(message = "Quantity must be positive")
     private Integer quantity;
@@ -14,12 +14,12 @@ public class UpdateOrderRequest {
     @Positive(message = "Price must be positive")
     private BigDecimal price;
 
-    public String getProductName() {
-        return productName;
+    public String getProduct() {
+        return product;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setProduct(String product) {
+        this.product = product;
     }
 
     public Integer getQuantity() {

@@ -8,8 +8,8 @@ import java.math.BigDecimal;
 
 public class CreateOrderRequest {
 
-    @NotBlank(message = "Product name is mandatory")
-    private String productName;
+    @NotBlank(message = "Product is mandatory")
+    private String product;
 
     @NotNull(message = "Quantity is mandatory")
     @Positive(message = "Quantity must be positive")
@@ -19,12 +19,12 @@ public class CreateOrderRequest {
     @Positive(message = "Price must be positive")
     private BigDecimal price;
 
-    public String getProductName() {
-        return productName;
+    public String getProduct() {
+        return product;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setProduct(String product) {
+        this.product = product;
     }
 
     public Integer getQuantity() {

@@ -20,7 +20,7 @@ public class Order {
     private Long id;
 
     @Column(name = "product")
-    private String productName;
+    private String product;
 
 
 
@@ -46,12 +46,12 @@ public class Order {
         this.id = id;
     }
 
-    public String getProductName() {
-        return productName;
+    public String getProduct() {
+        return product;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setProduct(String product) {
+        this.product = product;
     }
 
     public int getQuantity() {

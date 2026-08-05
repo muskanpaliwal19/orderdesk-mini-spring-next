@@ -6,7 +6,7 @@ import java.time.Instant;
 
 public class OrderResponse {
     private Long id;
-    private String productName;
+    private String product;
     private int quantity;
     private BigDecimal price;
     private String status;
@@ -15,7 +15,7 @@ public class OrderResponse {
 
     public OrderResponse(Order order) {
         this.id = order.getId();
-        this.productName = order.getProductName();
+        this.product = order.getProduct();
         this.quantity = order.getQuantity();
         this.price = order.getPrice();
         this.status = order.getStatus();
@@ -28,8 +28,8 @@ public class OrderResponse {
         return id;
     }
 
-    public String getProductName() {
-        return productName;
+    public String getProduct() {
+        return product;
     }
 
     public int getQuantity() {
