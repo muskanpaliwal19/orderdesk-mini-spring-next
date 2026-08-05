@@ -1,4 +1,4 @@
-CREATE TABLE orders (
+CREATE TABLE public.orders (
   id BIGSERIAL PRIMARY KEY,
   customer_name VARCHAR(120) NOT NULL,
   customer_email VARCHAR(200) NOT NULL,
@@ -11,4 +11,4 @@ CREATE TABLE orders (
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_orders_status ON orders(status);
+CREATE INDEX idx_orders_status ON public.orders(status);
