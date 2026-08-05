@@ -11,7 +11,6 @@ spring:
     url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:ordersdb;DB_CLOSE_DELAY=-1}
     username: ${SPRING_DATASOURCE_USERNAME:sa}
     password: ${SPRING_DATASOURCE_PASSWORD:password}
-    driver-class-name: ${SPRING_DATASOURCE_DRIVER-CLASS-NAME:org.h2.Driver}
   jpa:
     hibernate:
       ddl-auto: validate
@@ -35,7 +34,6 @@ spring:
   flyway:
     enabled: true # Let flyway run for tests on H2
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
     username: sa
     password: password
-    driver-class-name: org.h2.Driver

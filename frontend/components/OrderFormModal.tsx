@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, FormEvent, useEffect } from 'react';
-import { Order, OrderPayload, OrderStatus } from '@/lib/types';
+import { Order, OrderStatus, CreateOrderPayload, UpdateOrderPayload } from '@/lib/types';
 import { createOrder, updateOrder } from '@/lib/api';
 
 interface OrderFormModalProps {
@@ -11,50 +11,68 @@ interface OrderFormModalProps {
   setError: (message: string | null) => void;
 }
 
-const emptyPayload: OrderPayload = {
+const emptyFormData = {
     customerName: '',
     customerEmail: '',
     itemDescription: '',
     quantity: 1,
-    unitPriceCents: 0,
-    status: 'NEW',
+    unitPriceDollars: 0,
     notes: '',
+    status: 'NEW' as OrderStatus,
 };
 
 export default function OrderFormModal({ order, onClose, onSave, setError }: OrderFormModalProps) {
-  const [formData, setFormData] = useState<OrderPayload>(emptyPayload);
+  const [formData, setFormData] = useState(emptyFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (order) {
-        const {id, createdAt, updatedAt, ...payload} = order;
-        setFormData(payload);
+        setFormData({
+            customerName: order.customerName,
+            customerEmail: order.customerEmail,
+            itemDescription: order.itemDescription,
+            quantity: order.quantity,
+            unitPriceDollars: order.unitPriceCents / 100,
+            notes: order.notes ?? '',
+            status: order.status,
+        });
     } else {
-        setFormData(emptyPayload);
+        setFormData(emptyFormData);
     }
   }, [order]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: name === 'quantity' || name === 'unitPriceCents' ? parseInt(value, 10) || 0 : value }));
+    const { name, value, type } = e.target;
+    const isNumeric = type === 'number';
+    setFormData(prev => ({ ...prev, [name]: isNumeric ? parseFloat(value) || 0 : value }));
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    if (!formData.customerName.trim() || !formData.itemDescription.trim() || formData.quantity <= 0) {
-      setError("Customer name, item description and a positive quantity are required.");
+    if (!formData.customerName.trim() || !formData.itemDescription.trim() || !formData.customerEmail.trim()) {
+      setError("Customer name, email and item description are required.");
       return;
+    }
+    if (formData.quantity <= 0) {
+        setError("Quantity must be a positive number.");
+        return;
+    }
+    if (formData.unitPriceDollars <= 0) {
+        setError("Unit price must be a positive number.");
+        return;
     }
 
     setIsSubmitting(true);
 
     try {
       if (order) {
-        await updateOrder(order.id, formData);
+        const payload: UpdateOrderPayload = { ...formData };
+        await updateOrder(order.id, payload);
       } else {
-        await createOrder(formData);
+        const { status, ...payload }: CreateOrderPayload = formData;
+        await createOrder(payload);
       }
       onSave();
       onClose();
@@ -78,7 +96,7 @@ export default function OrderFormModal({ order, onClose, onSave, setError }: Ord
             </div>
             <div>
               <label htmlFor="customerEmail" className="block text-sm font-medium text-gray-700">Customer Email</label>
-              <input type="email" name="customerEmail" id="customerEmail" value={formData.customerEmail} onChange={handleInputChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+              <input type="email" name="customerEmail" id="customerEmail" value={formData.customerEmail} onChange={handleInputChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required />
             </div>
           </div>
           <div>
@@ -91,16 +109,18 @@ export default function OrderFormModal({ order, onClose, onSave, setError }: Ord
               <input type="number" name="quantity" id="quantity" value={formData.quantity} onChange={handleInputChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" min="1" required />
             </div>
             <div>
-              <label htmlFor="unitPriceCents" className="block text-sm font-medium text-gray-700">Unit Price (Cents)</label>
-              <input type="number" name="unitPriceCents" id="unitPriceCents" value={formData.unitPriceCents} onChange={handleInputChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" min="0" required />
+              <label htmlFor="unitPriceDollars" className="block text-sm font-medium text-gray-700">Unit Price ($)</label>
+              <input type="number" name="unitPriceDollars" id="unitPriceDollars" value={formData.unitPriceDollars} onChange={handleInputChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" min="0.01" step="0.01" required />
             </div>
           </div>
-          <div>
-            <label htmlFor="status" className="block text-sm font-medium text-gray-700">Status</label>
-            <select name="status" id="status" value={formData.status} onChange={handleInputChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-              {['NEW', 'PAID', 'SHIPPED', 'CANCELLED'].map(s => <option key={s} value={s}>{s}</option>)}
-            </select>
-          </div>
+          {order && (
+            <div>
+                <label htmlFor="status" className="block text-sm font-medium text-gray-700">Status</label>
+                <select name="status" id="status" value={formData.status} onChange={handleInputChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                {['NEW', 'PAID', 'SHIPPED', 'CANCELLED'].map(s => <option key={s} value={s}>{s}</option>)}
+                </select>
+            </div>
+          )}
           <div>
             <label htmlFor="notes" className="block text-sm font-medium text-gray-700">Notes</label>
             <textarea name="notes" id="notes" value={formData.notes ?? ''} onChange={handleInputChange} rows={3} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"></textarea>

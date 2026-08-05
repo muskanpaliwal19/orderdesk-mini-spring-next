@@ -2,17 +2,19 @@ package com.example.orders.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import jakarta.persistence.EntityListeners;
-import java.time.Instant;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.Instant;
 
 @Entity
 @Table(name = "orders")
@@ -23,13 +25,13 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "customer_name", nullable = false)
+    @Column(name = "customer_name", nullable = false, length = 120)
     private String customerName;
 
-    @Column(name = "customer_email", nullable = false)
+    @Column(name = "customer_email", nullable = false, length = 200)
     private String customerEmail;
 
-    @Column(name = "item_description", nullable = false)
+    @Column(name = "item_description", nullable = false, length = 255)
     private String itemDescription;
 
     @Column(nullable = false)

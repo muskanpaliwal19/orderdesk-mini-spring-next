@@ -1,5 +1,5 @@
 
-import { Order, OrderPayload } from './types';
+import { Order, CreateOrderPayload, UpdateOrderPayload } from './types';
 
 const API_BASE_URL = '/api';
 
@@ -25,7 +25,7 @@ export const deleteOrder = (id: number): Promise<null> => {
   return fetcher(`${API_BASE_URL}/orders/${id}`, { method: 'DELETE' });
 };
 
-export const createOrder = (data: OrderPayload): Promise<Order> => {
+export const createOrder = (data: CreateOrderPayload): Promise<Order> => {
     return fetcher(`${API_BASE_URL}/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -33,7 +33,7 @@ export const createOrder = (data: OrderPayload): Promise<Order> => {
     });
 };
 
-export const updateOrder = (id: number, data: OrderPayload): Promise<Order> => {
+export const updateOrder = (id: number, data: UpdateOrderPayload): Promise<Order> => {
     return fetcher(`${API_BASE_URL}/orders/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },

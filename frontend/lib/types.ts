@@ -13,4 +13,15 @@ export interface Order {
   updatedAt: string; // ISO 8601 date string
 }
 
-export type OrderPayload = Omit<Order, 'id' | 'createdAt' | 'updatedAt'>;
+export interface CreateOrderPayload {
+    customerName: string;
+    customerEmail: string;
+    itemDescription: string;
+    quantity: number;
+    unitPriceDollars: number;
+    notes: string | null;
+}
+
+export interface UpdateOrderPayload extends CreateOrderPayload {
+    status: OrderStatus;
+}
