@@ -22,7 +22,11 @@ public class OrderService {
     }
 
     public Order createOrder(CreateOrderRequest createOrderRequest) {
-        Order order = new Order(createOrderRequest);
+        Order order = new Order();
+        order.setProductName(createOrderRequest.getProductName());
+        order.setQuantity(createOrderRequest.getQuantity());
+        order.setPrice(createOrderRequest.getPrice());
+        order.setStatus("PENDING");
         return orderRepository.save(order);
     }
 
