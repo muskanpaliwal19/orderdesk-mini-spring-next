@@ -11,7 +11,7 @@ interface OrderListProps {
 
 export default function OrderList({ orders, onEdit, onDelete }: OrderListProps) {
   return (
-    <div className="bg-white shadow-md rounded-lg overflow-hidden">
+    <div className="bg-white shadow-md rounded-lg overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-100">
           <tr>

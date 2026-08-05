@@ -17,7 +17,7 @@ const statusColors: Record<OrderStatus, string> = {
 
 export default function OrderListItem({ order, onEdit, onDelete }: OrderListItemProps) {
   const formatCurrency = (cents: number) => `$${(cents / 100).toFixed(2)}`;
-  const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString().split('T')[0];
+  const formatDate = (dateString: string) => new Date(dateString).toISOString().split('T')[0];
 
   return (
     <tr key={order.id}>

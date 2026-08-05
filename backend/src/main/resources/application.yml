@@ -13,7 +13,7 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD:}
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
     # Defer dialect setup to be automatic based on connection
     database-platform: ${SPRING_JPA_DATABASE-PLATFORM:}
   flyway:
