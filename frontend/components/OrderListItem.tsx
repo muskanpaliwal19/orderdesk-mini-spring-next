@@ -35,8 +35,8 @@ export default function OrderListItem({ order, onEdit, onDelete }: OrderListItem
           {order.status}
         </span>
       </td>
-      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 max-w-xs truncate">{order.notes}</td>
-      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(order.createdAt)}</td>
+      <td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">{order.notes}</td>
+      <td className="px-6 py-4 text-sm text-gray-500">{formatDate(order.createdAt)}</td>
       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
         <button onClick={() => onEdit(order)} className="text-indigo-600 hover:text-indigo-900 mr-4">Edit</button>
         <button onClick={() => onDelete(order.id)} className="text-red-600 hover:text-red-900">Delete</button>

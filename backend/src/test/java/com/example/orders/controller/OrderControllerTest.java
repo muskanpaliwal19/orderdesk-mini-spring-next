@@ -22,6 +22,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -138,5 +139,35 @@ class OrderControllerTest {
     void testGetOrderById_notFound() throws Exception {
         mockMvc.perform(get("/api/orders/999"))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void testUpdateOrder() throws Exception {
+        Order order = new Order();
+        order.setCustomerName("Old Name");
+        order.setCustomerEmail("old@example.com");
+        order.setItemDescription("Old Item");
+        order.setQuantity(1);
+        order.setUnitPriceCents(1000);
+        order.setStatus(OrderStatus.NEW);
+        order.setCreatedAt(Instant.now());
+        order.setUpdatedAt(Instant.now());
+        Order savedOrder = orderRepository.save(order);
+
+        Map<String, Object> updateRequest = new HashMap<>();
+        updateRequest.put("customerName", "New Name");
+        updateRequest.put("customerEmail", "new@example.com");
+        updateRequest.put("itemDescription", "New Item");
+        updateRequest.put("quantity", 2);
+        updateRequest.put("unitPriceDollars", new BigDecimal("20.00"));
+        updateRequest.put("status", "PAID");
+        updateRequest.put("notes", "Some notes");
+
+        mockMvc.perform(put("/api/orders/" + savedOrder.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.customerName", is("New Name")))
+                .andExpect(jsonPath("$.status", is("PAID")));
     }
 }
