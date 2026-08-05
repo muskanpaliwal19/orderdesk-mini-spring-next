@@ -20,8 +20,8 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+    public List<Order> getAllOrders(Sort sort) {
+        return orderRepository.findAll(sort);
     }
 
     @Transactional(readOnly = true)

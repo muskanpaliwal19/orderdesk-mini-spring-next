@@ -71,7 +71,7 @@ export default function OrderFormModal({ order, onClose, onSave, setError }: Ord
         const payload: UpdateOrderPayload = { ...formData };
         await updateOrder(order.id, payload);
       } else {
-        const { status, ...payload }: CreateOrderPayload = formData;
+        const { status, ...payload } = formData;
         await createOrder(payload);
       }
       onSave();

@@ -18,7 +18,7 @@ async function fetcher(url: string, options: RequestInit = {}) {
 }
 
 export const getOrders = (): Promise<Order[]> => {
-  return fetcher(`${API_BASE_URL}/orders`);
+  return fetcher(`${API_BASE_URL}/orders?sort=createdAt,desc`);
 };
 
 export const deleteOrder = (id: number): Promise<null> => {

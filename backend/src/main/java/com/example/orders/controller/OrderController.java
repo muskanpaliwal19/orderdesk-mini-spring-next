@@ -7,10 +7,13 @@ import com.example.orders.dto.UpdateOrderRequest;
 import com.example.orders.model.Order;
 import com.example.orders.service.OrderService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.StringWriter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,8 +30,8 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<OrderDto> getAllOrders() {
-        return orderService.getAllOrders().stream()
+    public List<OrderDto> getAllOrders(@SortDefault(sort = "createdAt", direction = Sort.Direction.DESC) Sort sort) {
+        return orderService.getAllOrders(sort).stream()
                 .map(orderMapper::toDto)
                 .collect(Collectors.toList());
     }
@@ -67,5 +70,41 @@ public class OrderController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/export.csv")
+    public ResponseEntity<String> exportCsv() {
+        List<Order> orders = orderService.getAllOrders(Sort.by(Sort.Direction.ASC, "id"));
+        StringWriter sw = new StringWriter();
+        sw.append("id,customer_name,customer_email,item_description,quantity,unit_price_cents,status,created_at,updated_at,notes\n");
+        for (Order order : orders) {
+            sw.append(String.join(",",
+                    String.valueOf(order.getId()),
+                    escapeCsv(order.getCustomerName()),
+                    escapeCsv(order.getCustomerEmail()),
+                    escapeCsv(order.getItemDescription()),
+                    String.valueOf(order.getQuantity()),
+                    String.valueOf(order.getUnitPriceCents()),
+                    order.getStatus().name(),
+                    escapeCsv(order.getCreatedAt().toString()),
+                    escapeCsv(order.getUpdatedAt().toString()),
+                    escapeCsv(order.getNotes())
+            )).append("\n");
+        }
+
+        return ResponseEntity.ok()
+                .header("Content-Type", "text/csv")
+                .header("Content-Disposition", "attachment; filename=orders.csv")
+                .body(sw.toString());
+    }
+
+    private String escapeCsv(String data) {
+        if (data == null) {
+            return "";
+        }
+        if (data.contains(",") || data.contains("\"") || data.contains("\n")) {
+            return "\"" + data.replace("\"", "\"\"") + "\"";
+        }
+        return data;
     }
 }
