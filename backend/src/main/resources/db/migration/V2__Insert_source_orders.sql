@@ -1,6 +1,5 @@
--- Insert four legacy orders
-INSERT INTO orders (product, quantity, price, status, created_at, updated_at) VALUES
-('Legacy Product A', 1, 150.75, 'shipped', '2023-01-15 10:30:00', '2023-01-15 10:30:00'),
-('Legacy Product B', 1, 200.50, 'pending', '2023-02-20 14:00:00', '2023-02-20 14:00:00'),
-('Legacy Product C', 1, 45.00, 'delivered', '2023-03-10 09:00:00', '2023-03-10 09:00:00'),
-('Legacy Product D', 1, 80.25, 'shipped', '2023-04-01 18:45:00', '2023-04-01 18:45:00');
+INSERT INTO orders (id, customer_name, customer_email, item_description, quantity, unit_price_cents, status, notes, created_at, updated_at) VALUES
+(1001, 'Acme Corp', 'purchasing@acme.example', 'Steel widgets, 5cm', 40, 1250, 'PAID', 'Net-30 account', '2024-01-10 10:00:00+00', '2024-01-10 10:00:00+00'),
+(1002, 'Globex', 'orders@globex.example', 'Copper fittings', 12, 890, 'NEW', NULL, '2024-01-11 11:00:00+00', '2024-01-11 11:00:00+00'),
+(1003, 'Initech', 'sam@initech.example', 'TPS report binders', 100, 315, 'SHIPPED', 'Rush order, ship FedEx', '2024-01-12 12:00:00+00', '2024-01-12 12:00:00+00'),
+(1004, 'Umbrella Ltd', 'lab@umbrella.example', 'Glass vials 10ml', 500, 42, 'CANCELLED', 'Cancelled by customer 3/4', '2024-01-13 13:00:00+00', '2024-01-13 13:00:00+00');
