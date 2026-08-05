@@ -1,0 +1,9 @@
+CREATE TABLE orders (
+    id BIGSERIAL PRIMARY KEY,
+    product VARCHAR(255) NOT NULL,
+    quantity INT NOT NULL,
+    price NUMERIC(19, 2) NOT NULL,
+    status VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL
+);
