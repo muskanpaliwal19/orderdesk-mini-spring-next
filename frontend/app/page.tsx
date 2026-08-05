@@ -17,8 +17,12 @@ export default function Home() {
       const data = await getOrders();
       setOrders(data);
       setError(null);
-    } catch (e: any) {
-      setError(`Failed to fetch orders: ${e.message}`);
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setError(`Failed to fetch orders: ${e.message}`);
+      } else {
+        setError('An unknown error occurred');
+      }
       console.error(e);
     }
   };
@@ -43,8 +47,12 @@ export default function Home() {
       try {
         await deleteOrder(id);
         await fetchOrders(); // Refresh list
-      } catch (e: any) {
-        setError(`Failed to delete order: ${e.message}`);
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          setError(`Failed to delete order: ${e.message}`);
+        } else {
+          setError('An unknown error occurred');
+        }
         console.error(e);
       }
     }
