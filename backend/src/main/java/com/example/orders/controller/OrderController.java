@@ -6,6 +6,7 @@ import com.example.orders.dto.OrderMapper;
 import com.example.orders.dto.UpdateOrderRequest;
 import com.example.orders.model.Order;
 import com.example.orders.service.OrderService;
+import com.example.orders.service.CsvExportService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;
@@ -13,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.StringWriter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,10 +23,12 @@ public class OrderController {
 
     private final OrderService orderService;
     private final OrderMapper orderMapper;
+    private final CsvExportService csvExportService;
 
-    public OrderController(OrderService orderService, OrderMapper orderMapper) {
+    public OrderController(OrderService orderService, OrderMapper orderMapper, CsvExportService csvExportService) {
         this.orderService = orderService;
         this.orderMapper = orderMapper;
+        this.csvExportService = csvExportService;
     }
 
     @GetMapping
@@ -74,39 +76,10 @@ public class OrderController {
 
     @GetMapping("/export.csv")
     public ResponseEntity<String> exportCsv() {
-        List<OrderDto> orders = orderService.getAllOrders(Sort.by(Sort.Direction.ASC, "id")).stream()
-                .map(orderMapper::toDto)
-                .collect(Collectors.toList());
-        StringWriter sw = new StringWriter();
-        sw.append("id,customer_name,customer_email,item_description,quantity,unit_price_cents,status,created_at,updated_at,notes\n");
-        for (OrderDto order : orders) {
-            sw.append(String.join(",",
-                    String.valueOf(order.id()),
-                    escapeCsv(order.customerName()),
-                    escapeCsv(order.customerEmail()),
-                    escapeCsv(order.itemDescription()),
-                    String.valueOf(order.quantity()),
-                    String.valueOf(order.unitPriceCents()),
-                    order.status().name(),
-                    escapeCsv(order.createdAt().toString()),
-                    escapeCsv(order.updatedAt().toString()),
-                    escapeCsv(order.notes())
-            )).append("\n");
-        }
-
+        String csv = csvExportService.exportOrdersToCsv();
         return ResponseEntity.ok()
                 .header("Content-Type", "text/csv")
                 .header("Content-Disposition", "attachment; filename=orders.csv")
-                .body(sw.toString());
-    }
-
-    private String escapeCsv(String data) {
-        if (data == null) {
-            return "";
-        }
-        if (data.contains(",") || data.contains("\"") || data.contains("\n")) {
-            return "\"" + data.replace("\"", "\"\"") + "\"";
-        }
-        return data;
+                .body(csv);
     }
 }
