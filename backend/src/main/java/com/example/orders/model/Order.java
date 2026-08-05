@@ -1,11 +1,13 @@
 package com.example.orders.model;
 
 import jakarta.persistence.*;
+import jakarta.persistence.EntityListeners;
 import java.math.BigDecimal;
 import java.time.Instant;
 
 @Entity
 @Table(name = "orders")
+@EntityListeners(AuditingEntityListener.class)
 public class Order {
 
     public Order() {
@@ -34,17 +36,6 @@ public class Order {
 
     @Column(name = "updated_at")
     private Instant updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = Instant.now();
-        updatedAt = Instant.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = Instant.now();
-    }
 
     // Getters and setters
     public Long getId() {
