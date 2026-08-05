@@ -18,7 +18,7 @@
       ],
       "port": 8080,
       "healthCheck": {
-        "path": "/api/actuator/health",
+        "path": "/actuator/health",
         "timeoutSeconds": 180
       }
     }
