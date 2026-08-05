@@ -49,7 +49,7 @@ public class OrderMapper {
 
     private Integer convertDollarsToCents(BigDecimal dollars) {
         if (dollars == null) {
-            return 0;
+            throw new IllegalArgumentException("Price cannot be null.");
         }
         return dollars.multiply(BigDecimal.valueOf(100)).setScale(0, RoundingMode.HALF_UP).intValue();
     }
