@@ -30,7 +30,7 @@ public class OrderMapper {
         order.setCustomerEmail(createOrderRequest.customerEmail());
         order.setItemDescription(createOrderRequest.itemDescription());
         order.setQuantity(createOrderRequest.quantity());
-        order.setUnitPriceCents(createOrderRequest.unitPriceCents());
+        order.setUnitPriceCents(createOrderRequest.unitPriceDollars().multiply(new java.math.BigDecimal("100")).intValue());
         order.setStatus(OrderStatus.NEW);
         order.setNotes(createOrderRequest.notes());
         return order;
@@ -41,7 +41,7 @@ public class OrderMapper {
         order.setCustomerEmail(updateOrderRequest.customerEmail());
         order.setItemDescription(updateOrderRequest.itemDescription());
         order.setQuantity(updateOrderRequest.quantity());
-        order.setUnitPriceCents(updateOrderRequest.unitPriceCents());
+        order.setUnitPriceCents(updateOrderRequest.unitPriceDollars().multiply(new java.math.BigDecimal("100")).intValue());
         order.setStatus(updateOrderRequest.status());
         order.setNotes(updateOrderRequest.notes());
     }
