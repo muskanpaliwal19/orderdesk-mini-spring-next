@@ -1,5 +1,6 @@
 package com.example.orders.model;
 
+import com.example.orders.dto.CreateOrderRequest;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -8,11 +9,24 @@ import java.time.Instant;
 @Table(name = "orders")
 public class Order {
 
+    public Order() {
+    }
+
+    public Order(CreateOrderRequest request) {
+        this.productName = request.getProductName();
+        this.quantity = request.getQuantity();
+        this.price = request.getPrice();
+        this.status = "PENDING";
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String product;
+    @Column(name = "product_name")
+    private String productName;
+
+
 
     private int quantity;
 
@@ -46,12 +60,12 @@ public class Order {
         this.id = id;
     }
 
-    public String getProduct() {
-        return product;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setProduct(String product) {
-        this.product = product;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     public int getQuantity() {
