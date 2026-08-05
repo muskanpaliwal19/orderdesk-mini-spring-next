@@ -11,7 +11,7 @@ interface OrderListProps {
 
 export default function OrderList({ orders, onEdit, onDelete }: OrderListProps) {
   return (
-    <div className="bg-white shadow-md rounded-lg overflow-x-auto">
+    <div className="bg-white shadow-md rounded-lg overflow-hidden">
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-100">
           <tr>
@@ -27,7 +27,7 @@ export default function OrderList({ orders, onEdit, onDelete }: OrderListProps) 
             <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
+        <tbody className="bg-white divide-y divide-gray-2.00">
           {orders.map((order) => (
             <OrderListItem key={order.id} order={order} onEdit={onEdit} onDelete={onDelete} />
           ))}
