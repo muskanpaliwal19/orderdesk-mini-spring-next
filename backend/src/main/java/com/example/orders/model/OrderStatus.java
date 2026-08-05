@@ -1,9 +1,8 @@
 package com.example.orders.model;
 
 public enum OrderStatus {
-    PENDING,
-    PROCESSING,
+    NEW,
+    PAID,
     SHIPPED,
-    DELIVERED,
     CANCELLED
 }

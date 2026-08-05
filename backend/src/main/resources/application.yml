@@ -1,22 +1,28 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
 spring:
   application:
     name: orders
+  # Datasource properties with H2 as fallback
   datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
-    driver-class-name: org.postgresql.Driver
+    url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:ordersdb;DB_CLOSE_DELAY=-1}
+    username: ${SPRING_DATASOURCE_USERNAME:sa}
+    password: ${SPRING_DATASOURCE_PASSWORD:password}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER-CLASS-NAME:org.h2.Driver}
   jpa:
     hibernate:
       ddl-auto: validate
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+    # Defer dialect setup to be automatic based on connection
+    database-platform: ${SPRING_JPA_DATABASE-PLATFORM:}
   flyway:
     enabled: ${SPRING_FLYWAY_ENABLED:true}
 
 ---
 
+# Profile for running tests. Uses a separate in-memory database.
 spring:
   config:
     activate:
@@ -24,8 +30,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+    # Show SQL for debugging tests
+    show-sql: true
   flyway:
-    enabled: false
+    enabled: true # Let flyway run for tests on H2
   datasource:
     url: jdbc:h2:mem:testdb
     username: sa

@@ -1,43 +1,60 @@
 package com.example.orders.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.persistence.EntityListeners;
-import java.math.BigDecimal;
 import java.time.Instant;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "orders")
 @EntityListeners(AuditingEntityListener.class)
 public class Order {
 
-    public Order() {
-    }
-
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "product")
-    private String product;
+    @Column(name = "customer_name", nullable = false)
+    private String customerName;
 
+    @Column(name = "customer_email", nullable = false)
+    private String customerEmail;
 
+    @Column(name = "item_description", nullable = false)
+    private String itemDescription;
 
-    private int quantity;
+    @Column(nullable = false)
+    private Integer quantity;
 
-    private BigDecimal price;
+    @Column(name = "unit_price_cents", nullable = false)
+    private Integer unitPriceCents;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private OrderStatus status;
-    
-    @Column(name = "created_at", updatable = false)
+
+    private String notes;
+
+    @CreatedDate
+    @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
-    @Column(name = "updated_at")
+    @LastModifiedDate
+    @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-    // Getters and setters
+    public Order() {
+    }
+
     public Long getId() {
         return id;
     }
@@ -46,28 +63,44 @@ public class Order {
         this.id = id;
     }
 
-    public String getProduct() {
-        return product;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public void setProduct(String product) {
-        this.product = product;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
-    public int getQuantity() {
+    public String getCustomerEmail() {
+        return customerEmail;
+    }
+
+    public void setCustomerEmail(String customerEmail) {
+        this.customerEmail = customerEmail;
+    }
+
+    public String getItemDescription() {
+        return itemDescription;
+    }
+
+    public void setItemDescription(String itemDescription) {
+        this.itemDescription = itemDescription;
+    }
+
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public Integer getUnitPriceCents() {
+        return unitPriceCents;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setUnitPriceCents(Integer unitPriceCents) {
+        this.unitPriceCents = unitPriceCents;
     }
 
     public OrderStatus getStatus() {
@@ -76,6 +109,14 @@ public class Order {
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public Instant getCreatedAt() {
