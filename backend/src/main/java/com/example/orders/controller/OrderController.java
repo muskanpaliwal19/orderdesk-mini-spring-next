@@ -14,6 +14,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -75,11 +80,18 @@ public class OrderController {
     }
 
     @GetMapping("/export.csv")
-    public ResponseEntity<String> exportCsv() {
-        String csv = csvExportService.exportOrdersToCsv();
+    public ResponseEntity<StreamingResponseBody> exportCsv() {
+        StreamingResponseBody stream = output -> {
+            try (Writer writer = new PrintWriter(new OutputStreamWriter(output))) {
+                csvExportService.writeOrdersToCsv(writer);
+            } catch (Exception e) {
+                // TODO: add logging
+            }
+        };
+
         return ResponseEntity.ok()
                 .header("Content-Type", "text/csv")
                 .header("Content-Disposition", "attachment; filename=orders.csv")
-                .body(csv);
+                .body(stream);
     }
 }

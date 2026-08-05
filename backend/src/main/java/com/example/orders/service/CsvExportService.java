@@ -8,7 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.io.StringWriter;
+import java.io.Writer;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,17 +23,16 @@ public class CsvExportService {
         this.orderMapper = orderMapper;
     }
 
-    public String exportOrdersToCsv() {
+    public void writeOrdersToCsv(Writer writer) throws IOException {
         List<OrderDto> orders = orderService.getAllOrders(Sort.by(Sort.Direction.ASC, "id")).stream()
                 .map(orderMapper::toDto)
                 .collect(Collectors.toList());
 
-        StringWriter sw = new StringWriter();
         CSVFormat csvFormat = CSVFormat.DEFAULT.builder()
                 .setHeader("id", "customer_name", "customer_email", "item_description", "quantity", "unit_price_cents", "status", "created_at", "updated_at", "notes")
                 .build();
 
-        try (final CSVPrinter printer = new CSVPrinter(sw, csvFormat)) {
+        try (final CSVPrinter printer = new CSVPrinter(writer, csvFormat)) {
             for (OrderDto order : orders) {
                 printer.printRecord(
                         order.id(),
@@ -48,10 +47,6 @@ public class CsvExportService {
                         order.notes()
                 );
             }
-        } catch (IOException e) {
-            // IOException is not expected with StringWriter
-            throw new RuntimeException("Failed to generate CSV file", e);
         }
-        return sw.toString();
     }
 }
